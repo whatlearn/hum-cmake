@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(hum-cmake)
 
-option(BUILD_TEST "whether or not build test" ON)
+option(BUILD_TEST "whether or not build test" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 # add_compile_options(-std=c++11)
@@ -30,19 +30,25 @@ message(STATUS "CMAKE_ARCHIVE_OUTPUT_DIRECOTRY: ${CMAKE_ARCHIVE_OUTPUT_DIRECOTRY
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 
-find_package(Threads)
-if(NOT Threads_FOUND)
-    message(FATAL_ERROR "Not Found Thread Library")
+aux_source_directory("${CMAKE_SOURCE_DIR}/src" src_lists)
+
+if(NOT MSVC)
+    find_package(Threads)
+    if(NOT Threads_FOUND)
+        message(FATAL_ERROR "Not Found Thread Library")
+    endif()
 endif()
 
-find_package(Factory)
-include_directories(${Factory_INCLUDE_DIR})
+# find_package(Factory)
+# include_directories(${Factory_INCLUDE_DIR})
 
-add_executable(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/src/main.cpp")
+add_executable("${PROJECT_NAME}"
+	       "${src_lists}"
+	       "${CMAKE_SOURCE_DIR}/src/main.cpp")
 
-target_link_libraries("${PROJECT_NAME}"
-            ${Factory_LIBS}
-            Threads::Threads)
+# target_link_libraries("${PROJECT_NAME}"
+#             ${Factory_LIBS}
+#             Threads::Threads)
 
 # add_custom_target(TARGET copy-include
 #                 COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}/output/include)
