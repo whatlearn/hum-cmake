@@ -7,5 +7,5 @@ Factory::Factory() {}
 Factory::~Factory() {}
 
 void Factory::show(const std::string& str) {
-    std::cout << "str" << std::endl;
+    std::cout << str << std::endl;
 }
